@@ -1,0 +1,28 @@
+
+/* .MuiTabs-scrollButtons.Mui-disabled {
+    opacity: 0.3;
+  } */
+
+  .MuiTabs-flexContainer{
+    gap: 10px;
+    
+  }
+
+  .tab-box {
+    overflow-x: auto;
+  }
+
+  .tabs{
+    font-family: "Commons";
+  }
+
+
+  @media (max-width: 768px) {
+    .tab-box {
+      min-width: auto; 
+    }
+  }
+
+
+
+  

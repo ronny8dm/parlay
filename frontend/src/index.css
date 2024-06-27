@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "Commons";
+    src: url("/fonts/tt-commons-cufonfonts/TT-Commons-Medium.otf") format("opentype");
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.commons{
+    font-family: Commons;
+}
+
+body{
+    background-color: theme('colors.background');
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
