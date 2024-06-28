@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import "./LeagueTabs.css";
 import BaseballIcon from "../../assets/baseball.tsx";
 import SoccerIcon from "../../assets/soccer.tsx";
-import BasketballIcon from "../../assets/baseball.tsx";
+import BasketballIcon from "../../assets/basketball.tsx";
 
 export default function LeagueTabs() {
   const [value, setValue] = React.useState(0);
@@ -17,7 +17,7 @@ export default function LeagueTabs() {
   };
 
   return (
-    <div className="flex row items-center overflow-x-auto justify-center w-full">
+    <div className="flex mb-20 fixed row items-center overflow-x-auto justify-center w-full">
       <Box
         sx={{
           maxWidth: { xs: 400, sm: 1080 },
