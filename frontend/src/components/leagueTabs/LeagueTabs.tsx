@@ -7,12 +7,11 @@ import Box from "@mui/material/Box";
 import "./LeagueTabs.css";
 import BaseballIcon from "../../assets/baseball.tsx";
 import SoccerIcon from "../../assets/soccer.tsx";
-<<<<<<< HEAD
 import BasketballIcon from "../../assets/basketball.tsx";
 import StatsOptions from "../statsOptions/StatsOptions.tsx";
-=======
-import BasketballIcon from "../../assets/baseball.tsx";
->>>>>>> parent of 6bd8e97 (news feed created)
+
+
+
 
 export default function LeagueTabs() {
   const [value, setValue] = useState(0);
@@ -20,6 +19,7 @@ export default function LeagueTabs() {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+    console.log(newValue)
     switch (newValue) {
       case 0:
         setLeague("mlb");
@@ -36,7 +36,8 @@ export default function LeagueTabs() {
   };
 
   return (
-    <div className="flex row items-center overflow-x-auto justify-center w-full">
+    <div className=" gap-2 flex flex-col items-center overflow-x-auto justify-center w-full">
+      
       <Box
         sx={{
           maxWidth: { xs: 400, sm: 1080 },

@@ -10,6 +10,7 @@ import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import LeagueTabs from "./components/leagueTabs/LeagueTabs";
 import theme from "./theme.tsx";
+import StatsOptions from "./components/statsOptions/StatsOptions.tsx";
 
 // interface Team {
 //   id: string;
@@ -87,11 +88,6 @@ function App() {
         <Header />
         <main className="grow my-20 p-2">
           <LeagueTabs />
-          <h1 className="text-3xl text-white font-bold underline">Teams</h1>
-          {/* <ul>
-          {Array.isArray(teams) &&
-            teams.map((team, index) => <li key={index}>{team.displayName}</li>)}
-        </ul> */}
         </main>
         <Footer />
       </div>
