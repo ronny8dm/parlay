@@ -1,23 +1,42 @@
 /** @format */
 
-import * as React from "react";
+import React, { useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import "./LeagueTabs.css";
 import BaseballIcon from "../../assets/baseball.tsx";
 import SoccerIcon from "../../assets/soccer.tsx";
+<<<<<<< HEAD
 import BasketballIcon from "../../assets/basketball.tsx";
+import StatsOptions from "../statsOptions/StatsOptions.tsx";
+=======
+import BasketballIcon from "../../assets/baseball.tsx";
+>>>>>>> parent of 6bd8e97 (news feed created)
 
 export default function LeagueTabs() {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [league, setLeague] = useState("mlb");
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+    switch (newValue) {
+      case 0:
+        setLeague("mlb");
+        break;
+      case 1:
+        setLeague("premierLeague");
+        break;
+      case 2:
+        setLeague("nba");
+        break;
+      default:
+        setLeague("mlb");
+    }
   };
 
   return (
-    <div className="flex mb-20 fixed row items-center overflow-x-auto justify-center w-full">
+    <div className="flex row items-center overflow-x-auto justify-center w-full">
       <Box
         sx={{
           maxWidth: { xs: 400, sm: 1080 },
@@ -63,11 +82,12 @@ export default function LeagueTabs() {
             gap: 1,
           }}
         >
-          <Tab icon={<BaseballIcon />} label="Baseball" />
-          <Tab icon={<SoccerIcon />} label="Soccer" />
-          <Tab icon={<BasketballIcon />} label="Basketball" />
+          <Tab icon={<BaseballIcon />} label="MLB" />
+          <Tab icon={<SoccerIcon />} label="Premier league" />
+          <Tab icon={<BasketballIcon />} label="NBA" />
         </Tabs>
       </Box>
+      <StatsOptions league={league} />
     </div>
   );
 }

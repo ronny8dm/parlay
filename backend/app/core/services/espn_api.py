@@ -88,7 +88,7 @@ async def get_scoreboard(sport, slug):
 async def get_roster(sport, slug, team_id):
     semaphore = asyncio.Semaphore(max_concurrent_tasks)
     async with aiohttp.ClientSession() as session:
-        url = f"{'BASE_TEMAS_URL'}sports/{sport}/{slug}/teams/{team_id}?enable=roster"
+        url = f"{os.getenv('BASE_TEAMS_URL')}/sports/{sport}/{slug}/teams/{team_id}?enable=roster"
         try:
             response = await fetch(session, url, semaphore, ssl_context_leagues)
             if isinstance(response, str):
@@ -102,7 +102,7 @@ async def get_roster(sport, slug, team_id):
 async def get_schedule(sport, slug, team_id):
     semaphore = asyncio.Semaphore(max_concurrent_tasks)
     async with aiohttp.ClientSession() as session:
-        url = f"{'BASE_TEAMS_URL'}sports/{sport}/{slug}/teams/{team_id}/schedule"
+        url = f"{os.getenv('BASE_TEAMS_URL')}/sports/{sport}/{slug}/teams/{team_id}/schedule"
         try:
             response = await fetch(session, url, semaphore, ssl_context_leagues)
             if isinstance(response, str):

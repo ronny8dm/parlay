@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 SUPPORTED_LEAGUES = {
     "baseball": ["mlb", "college-baseball"],
     "basketball": ["nba", "wnba"],
-    "soccer": ["uefa.euro"],
+    "soccer": ["eng.1"],
     "football": ["nfl"]
 }
 

@@ -10,7 +10,6 @@ import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import LeagueTabs from "./components/leagueTabs/LeagueTabs";
 import theme from "./theme.tsx";
-import NewsFeed from "./components/newsFeed/NewsFeed.tsx";
 
 // interface Team {
 //   id: string;
@@ -82,27 +81,17 @@ function App() {
   //     fetchTeams();
   //   }, []);
 
-  const newsData = [
-    {
-      id: 1,
-      title: "News Title 1",
-      description: "News description about an important event.",
-      timestamp: "2024-06-27T12:00:00Z",
-    },
-    {
-      id: 2,
-      title: "News Title 2",
-      description: "Another piece of news.",
-      timestamp: "2024-06-27T13:00:00Z",
-    },
-  ];
   return (
     <ThemeProvider theme={theme}>
       <div className="App flex flex-col min-h-screen">
         <Header />
         <main className="grow my-20 p-2">
           <LeagueTabs />
-          <NewsFeed newsItems={newsData} />
+          <h1 className="text-3xl text-white font-bold underline">Teams</h1>
+          {/* <ul>
+          {Array.isArray(teams) &&
+            teams.map((team, index) => <li key={index}>{team.displayName}</li>)}
+        </ul> */}
         </main>
         <Footer />
       </div>
