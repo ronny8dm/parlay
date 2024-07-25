@@ -6,21 +6,17 @@ import "./statsOptions.css"
 
 interface StatsOptionsProps {
   league: string;
+  onDataFetch: (data: any) => void;
 }
 
 
 export default function StatsOptions(props: StatsOptionsProps) {
-  const {league} = props;
-  const [data, setData] = useState(null);
+  const {league, onDataFetch} = props;
 
   const fetchData = async (option: any) => {
     try {
       const response = await axios.get(`/baseball/${option}`);
-      
-      setData(response.data);
-
-      const responseData = response.data
-      console.log("fetching data: ", responseData)
+      onDataFetch(response.data)
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -30,33 +26,27 @@ export default function StatsOptions(props: StatsOptionsProps) {
     fetchData(option);
   };
 
-    console.log(league)
   return (
-    <div className="container-btn justify-center justify-between flex solid border-primary-500 bg-transparent rounded-md p-4">
+    <div className="container-btn justify-center justify-between flex  border-primary-500 bg-transparent  p-4">
     {league === "mlb" && (
       <div className="flex gap-2">
-        <button className="bg-secondary-200 text-white p-2 rounded-md" onClick={() => handleOptionClick("standings")}>Standings</button>
-        <button  className="bg-secondary-200 text-white p-2 rounded-md" onClick={() => handleOptionClick("odds")}>Odds</button>
-        <button className="bg-secondary-200 text-white p-2 rounded-md" onClick={() => handleOptionClick("aiPicks")}>AI Picks</button>
+        <button className="bg-secondary-200 text-white py-2 px-3 rounded-md" onClick={() => handleOptionClick("standings")}>Standings</button>
+        <button  className="bg-secondary-200 text-white py-2 px-3 rounded-md" onClick={() => handleOptionClick("odds")}>Odds</button>
+        <button className="bg-secondary-200 text-white py-2 px-3 rounded-md" onClick={() => handleOptionClick("aiPicks")}>AI Picks</button>
       </div>
     )}
     {league === "premierLeague" && (
       <div className="flex gap-2">
-        <button className="bg-secondary-200 text-white p-2 rounded-md" onClick={() => handleOptionClick("standings")}>Table</button>
-        <button className="bg-secondary-200 text-white p-2 rounded-md" onClick={() => handleOptionClick("odds")}>Odds</button>
-        <button className="bg-secondary-200 text-white p-2 rounded-md" onClick={() => handleOptionClick("aiPicks")}>AI Picks</button>
+        <button className="bg-secondary-200 text-white py-2 px-3 rounded-md" onClick={() => handleOptionClick("standings")}>Table</button>
+        <button className="bg-secondary-200 text-white py-2 px-3 rounded-md" onClick={() => handleOptionClick("odds")}>Odds</button>
+        <button className="bg-secondary-200 text-white py-2 px-3 rounded-md" onClick={() => handleOptionClick("aiPicks")}>AI Picks</button>
       </div>
     )}
     {league === "nba" && (
       <div className="flex gap-2">
-        <button className="bg-secondary-200 text-white p-2 rounded-md" onClick={() => handleOptionClick("standings")}>Standings</button>
-        <button className="bg-secondary-200 text-white p-2 rounded-md"onClick={() => handleOptionClick("odds")}>Odds</button>
-        <button className="bg-secondary-200 text-white p-2 rounded-md" onClick={() => handleOptionClick("aiPicks")}>AI Picks</button>
-      </div>
-    )}
-    {data && (
-      <div className="data-display">
-        <pre>{JSON.stringify(data, null, 2)}</pre>
+        <button className="bg-secondary-200 text-white py-2 px-3 rounded-md" onClick={() => handleOptionClick("standings")}>Standings</button>
+        <button className="bg-secondary-200 text-white py-2 px-3 rounded-md"onClick={() => handleOptionClick("odds")}>Odds</button>
+        <button className="bg-secondary-200 text-white py-2 px-3 rounded-md" onClick={() => handleOptionClick("aiPicks")}>AI Picks</button>
       </div>
     )}
   </div>

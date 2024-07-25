@@ -8,36 +8,37 @@ import "./LeagueTabs.css";
 import BaseballIcon from "../../assets/baseball.tsx";
 import SoccerIcon from "../../assets/soccer.tsx";
 import BasketballIcon from "../../assets/basketball.tsx";
-import StatsOptions from "../statsOptions/StatsOptions.tsx";
 
+interface LeagueTabsProps {
+  league: string;
+  onLeagueChange: (newLeague: string) => void;
+}
 
-
-
-export default function LeagueTabs() {
+export default function LeagueTabs(props: LeagueTabsProps) {
   const [value, setValue] = useState(0);
-  const [league, setLeague] = useState("mlb");
+  const { league, onLeagueChange } = props;
+
+  console.log("LeagueTabs render", { league, onLeagueChange });
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-    console.log(newValue)
     switch (newValue) {
       case 0:
-        setLeague("mlb");
+        onLeagueChange("mlb");
         break;
       case 1:
-        setLeague("premierLeague");
+        onLeagueChange("premierLeague");
         break;
       case 2:
-        setLeague("nba");
+        onLeagueChange("nba");
         break;
       default:
-        setLeague("mlb");
+        onLeagueChange("mlb");
     }
   };
 
   return (
-    <div className=" gap-2 flex flex-col items-center overflow-x-auto justify-center w-full">
-      
+    <div className="gap-2 flex flex-col items-center overflow-x-auto justify-center w-full">
       <Box
         sx={{
           maxWidth: { xs: 400, sm: 1080 },
@@ -84,11 +85,10 @@ export default function LeagueTabs() {
           }}
         >
           <Tab icon={<BaseballIcon />} label="MLB" />
-          <Tab icon={<SoccerIcon />} label="Premier league" />
+          <Tab icon={<SoccerIcon />} label="Premier League" />
           <Tab icon={<BasketballIcon />} label="NBA" />
         </Tabs>
       </Box>
-      <StatsOptions league={league} />
     </div>
   );
 }

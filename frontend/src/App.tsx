@@ -11,6 +11,7 @@ import Footer from "./components/footer/Footer";
 import LeagueTabs from "./components/leagueTabs/LeagueTabs";
 import theme from "./theme.tsx";
 import StatsOptions from "./components/statsOptions/StatsOptions.tsx";
+import Board from "./components/board/Board.tsx";
 
 // interface Team {
 //   id: string;
@@ -87,7 +88,7 @@ function App() {
       <div className="App flex flex-col min-h-screen">
         <Header />
         <main className="grow my-20 p-2">
-          <LeagueTabs />
+          <Board/>
         </main>
         <Footer />
       </div>
