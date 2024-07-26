@@ -3,27 +3,32 @@
 import React, { useState } from 'react';
 import LeagueTabs from '../leagueTabs/LeagueTabs';
 import StatsOptions from '../statsOptions/StatsOptions';
-// import StandingsTable from '../standingsTable/StandingsTable';
+import StandingsBoard from '../standingsBoard/StandingsBoard';
 
-export default function Board() { // Make sure the function name matches your export default
-  const [league, setLeague] = useState("mlb");
-  const [data, setData] = useState(null);
+interface LeagueSport {
+  league: string;
+  sport: string;
+}
 
-  const handleLeagueChange = (newLeague: string) => {
-    setLeague(newLeague);
+export default function Board() { 
+  const [leagueSport, setLeagueSport] = useState<LeagueSport>({ league: "mlb", sport: "baseball" });
+  const [data, setData] = useState<any[]>([]);
+  const [headers, setHeaders] = useState<string[]>([])
+
+  const handleLeagueChange = (newLeagueSport: LeagueSport) => {
+    setLeagueSport(newLeagueSport);
   };
 
-  console.log("Board render", { handleLeagueChange });
-
-  const handleDataFetch = (fetchedData: any) => {
+  const handleDataFetch = (fetchedData: any[], fetchHeaders: string[]) => {
     setData(fetchedData);
+    setHeaders(fetchHeaders)
   };
 
   return (
     <div className="flex flex-col items-center w-full p-4">
-      <LeagueTabs league={league} onLeagueChange={handleLeagueChange} />
-      <StatsOptions league={league} onDataFetch={handleDataFetch} />
-      {/* {data && <StandingsTable data={data} />} */}
+      <LeagueTabs onLeagueChange={handleLeagueChange} />
+      <StatsOptions league={leagueSport.league} sport={leagueSport.sport} onDataFetch={handleDataFetch} />
+      {data.length > 0 && <StandingsBoard data={data} headers={headers} />}
     </div>
   );
 }

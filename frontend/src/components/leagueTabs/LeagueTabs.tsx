@@ -10,30 +10,30 @@ import SoccerIcon from "../../assets/soccer.tsx";
 import BasketballIcon from "../../assets/basketball.tsx";
 
 interface LeagueTabsProps {
-  league: string;
-  onLeagueChange: (newLeague: string) => void;
+  onLeagueChange: (newLeague: {league: string, sport: string}) => void;
 }
 
 export default function LeagueTabs(props: LeagueTabsProps) {
   const [value, setValue] = useState(0);
-  const { league, onLeagueChange } = props;
+  const { onLeagueChange } = props;
+  const [ sport, setSport] = useState("baseball")
 
-  console.log("LeagueTabs render", { league, onLeagueChange });
+  console.log("LeagueTabs render ", { onLeagueChange });
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     switch (newValue) {
       case 0:
-        onLeagueChange("mlb");
+        onLeagueChange({league: "mlb", sport: "baseball"});
         break;
       case 1:
-        onLeagueChange("premierLeague");
+        onLeagueChange({league: "eng.1", sport:"soccer"});
         break;
       case 2:
-        onLeagueChange("nba");
+        onLeagueChange({league: "nba", sport: "basketball"});
         break;
       default:
-        onLeagueChange("mlb");
+        onLeagueChange({league: "mlb", sport: "baseball"});
     }
   };
 
