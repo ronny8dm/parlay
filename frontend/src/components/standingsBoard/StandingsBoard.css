@@ -1,0 +1,72 @@
+.table-content{
+    display: grid;
+    grid-template-columns: minmax(100%, 1fr);
+    padding: 12px 0;
+    text-align: left;
+}
+
+.table_title{
+    color: #2b2c2d;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 21px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+    position: relative;
+    text-align: left;
+    text-transform: capitalize;
+}
+
+.table-fixed-left{
+    height: fit-content;
+    width: auto;
+    border-right: 1px solid #dcdddf;
+    padding: 0;
+}
+
+.team_logo{
+    margin: -3px 0 -4px;
+}
+
+.table_tbody{
+    vertical-align: middle;
+    unicode-bidi: isolate;
+    border-color: inherit;
+    display: table-row-group;
+}
+
+.table_tr{
+    display: table-row;
+}
+
+.table_td{
+    text-align: right;
+}
+
+.table_th{
+    border-bottom: 1px solid #dcdddf;
+    border-top: 1px solid #dcdddf;
+    color: #48494a;
+    font-size: 11px;
+    height: 24px;
+    line-height: 15px;
+    text-transform: uppercase;
+}
+
+table th{
+    font-size: 12px;
+}
+
+.logo{
+    max-width: none;
+}
+
+thead{
+    vertical-align: middle;
+    unicode-bidi: isolate;
+    border-color: inherit;
+}
+
+.table_thead{
+    display: table-header-group;
+}

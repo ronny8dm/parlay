@@ -18,8 +18,6 @@ export default function LeagueTabs(props: LeagueTabsProps) {
   const { onLeagueChange } = props;
   const [ sport, setSport] = useState("baseball")
 
-  console.log("LeagueTabs render ", { onLeagueChange });
-
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     switch (newValue) {
