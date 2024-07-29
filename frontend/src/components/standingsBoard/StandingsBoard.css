@@ -1,8 +1,11 @@
 .table-content{
     display: grid;
     grid-template-columns: minmax(100%, 1fr);
-    padding: 12px 0;
+    padding: 20px;
     text-align: left;
+    border: .2px solid #2a283c;
+    border-radius: 10px;
+    
 }
 
 .table_title{
@@ -17,12 +20,13 @@
     text-transform: capitalize;
 }
 
-.table-fixed-left{
+.table_col-group{
     height: fit-content;
     width: auto;
     border-right: 1px solid #dcdddf;
     padding: 0;
 }
+
 
 .team_logo{
     margin: -3px 0 -4px;
@@ -46,11 +50,16 @@
 .table_th{
     border-bottom: 1px solid #dcdddf;
     border-top: 1px solid #dcdddf;
-    color: #48494a;
+    color: #dcdddf;
     font-size: 11px;
     height: 24px;
     line-height: 15px;
     text-transform: uppercase;
+}
+
+.table_th-empty{
+    border-top: 1px solid #dcdddf;
+    padding: .96rem;
 }
 
 table th{

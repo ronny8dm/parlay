@@ -120,7 +120,6 @@ class DataFetcher:
 
         logger.info(f"Fetching summary for {sport}...")
         summaries_data = {}
-        # for slug in SUPPORTED_LEAGUES[0]:
         slug = "mlb"
         print(f"Processing slug: {slug}")
         scoreboard = self.data[sport].get("scoreboards", {}).get(slug)

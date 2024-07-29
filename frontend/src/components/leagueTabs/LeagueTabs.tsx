@@ -16,7 +16,6 @@ interface LeagueTabsProps {
 export default function LeagueTabs(props: LeagueTabsProps) {
   const [value, setValue] = useState(0);
   const { onLeagueChange } = props;
-  const [ sport, setSport] = useState("baseball")
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -25,10 +24,16 @@ export default function LeagueTabs(props: LeagueTabsProps) {
         onLeagueChange({league: "mlb", sport: "baseball"});
         break;
       case 1:
-        onLeagueChange({league: "eng.1", sport:"soccer"});
+        onLeagueChange({league: "college-baseball", sport:"baseball"})
         break;
       case 2:
+        onLeagueChange({league: "eng.1", sport:"soccer"});
+        break;
+      case 3:
         onLeagueChange({league: "nba", sport: "basketball"});
+        break;
+      case 4:
+        onLeagueChange({league: "wnba", sport:"basketball"})
         break;
       default:
         onLeagueChange({league: "mlb", sport: "baseball"});
@@ -83,8 +88,10 @@ export default function LeagueTabs(props: LeagueTabsProps) {
           }}
         >
           <Tab icon={<BaseballIcon />} label="MLB" />
+          <Tab icon={<BaseballIcon />} label="College Baseball" />
           <Tab icon={<SoccerIcon />} label="Premier League" />
           <Tab icon={<BasketballIcon />} label="NBA" />
+          <Tab icon={<BasketballIcon />} label="WNBA" />
         </Tabs>
       </Box>
     </div>
