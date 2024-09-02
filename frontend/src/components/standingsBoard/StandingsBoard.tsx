@@ -1,5 +1,7 @@
-import React from 'react';
-import "./StandingsBoard.css"
+/** @format */
+
+import React from "react";
+import "./StandingsBoard.css";
 
 interface StandingsProps {
   data: any;
@@ -12,93 +14,82 @@ export default function StandingsBoard(props: StandingsProps) {
   console.log("data in standings board ", data);
   console.log("selected league: ", selectedLeague);
 
-  const leagueData = data[selectedLeague]?.children.map((child: any) => ({
-    league: child.name,
-    entries: child.standings.entries.map((entry: any) => ({
-      team: entry.team.displayName,
-      abbreviation: entry.team.abbreviation,
-      stats: entry.stats.reduce((acc: Record<string, string>, stat: any) => {
-        acc[stat.shortDisplayName] = stat.displayValue;
-        return acc;
-      }, {}),
-      logo: entry.team.logos?.[0]?.href || '',
-    }))
-  })) || [];
+  const standingsArray = data.data;
 
+  if (!Array.isArray(standingsArray)) {
+    console.error(
+      "Expected standingsArray to be an array, but got:",
+      standingsArray
+    );
+  }
 
-  console.log("",leagueData)
+  const standingsData = standingsArray.map((teamData: any) => {
+    const { name: teamName, image_path: logo } = teamData.participant;
+    const standingsDetails = teamData.details
+      .filter((detail: any) => [133, 130, 132, 187].includes(detail.type_id))
+      .map((detail: any) => ({
+        heading: detail.type.name,
+        value: detail.value,
+      }));
 
-  console.log("League data elements: ");
-  leagueData.forEach((element: any, index: any) => {
-    console.log(`element ${index}: `, element)
+    return {
+      teamName,
+      logo,
+      standingsDetails,
+    };
   });
 
-  const nationalLeagueData = leagueData.filter((item: any) => item.league === 'National League');
-  const americanLeagueData = leagueData.filter((item: any) => item.league === 'American League');
+  const statsHeaders = [
+    "Team",
+    ...standingsData[0]?.standingsDetails.map((detail: any) => detail.heading),
+  ];
 
-  const statsHeaders = ['W', 'L', 'PCT', 'GB', 'HOME', 'AWAY', 'RS', 'RA', 'DIFF', 'STRK', 'L10'];
-
- 
   return (
-    
-    <div className='table-content'>
-    {leagueData.map((leagueInfo: any, idx: number) => (
-     <div key={idx} className="ResponsiveTable Responsive--fixed-left">
-        <div className="table_title text-white ">{leagueInfo.league}</div>
-        <div className="flex">
-          <table className='table_col-group text-white'>
-            <thead>
-              <tr>
-                <th className=' table_th-empty  border-b'></th>
-              </tr>
-            </thead>
-            <tbody>
-              {leagueInfo.entries.map((entry: any, idx: number) => (
-                <tr key={idx}>
-                  <td className={`table_td py-2 px-4 border-b ${idx % 2 === 0 ? 'bg-secondary-200' : 'cell-light'}`}>
-                    <div className="flex items-center">
-                      <span className="pr-4 team_logo">
-                        <img src={entry.logo} alt={entry.team} className='logo h-5 w-5' />
-                      </span>
-                      <span className="hidden md:inline">{entry.team}</span>
-                      <span className="inline md:hidden">{entry.abbreviation}</span>
-                    </div>
-                  </td>
-                </tr>
+    <div className="overflow-x-auto">
+      <table className=" w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            {statsHeaders.map((header, index) => (
+              <th scope="col" className="px-6 py-3" key={index}>
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {standingsData.map((team: any, index: number) => (
+            <tr
+              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+              key={index}
+            >
+              <th
+                scope="row"
+                className={`px-4 items-center flex font-medium text-gray-900 whitespace-nowrap dark:text-white ${
+                  index % 2 === 0 ? "bg-secondary-200" : "cell-light"
+                }`}
+              >
+                <img
+                  className="py-1"
+                  src={team.logo}
+                  alt={`${team.teamName} logo`}
+                  style={{ width: "30px", marginRight: "8px" }}
+                />
+                {team.teamName}
+              </th>
+              {team.standingsDetails.map((detail: any, detailIndex: number) => (
+                <td
+                  key={detailIndex}
+                  className={`${
+                    index % 2 === 0 ? "bg-secondary-200" : "cell-light"
+                  }`}
+                >
+                  {detail.value}
+                </td>
               ))}
-            </tbody>
-          </table>
-          <div className='table_ScrollerWrapper relative overflow-hidden'>
-            <div className='table_shadow-left opacity-0'></div>
-            <div className='table_scroller'>
-              <table className='table table-align-right text-white'>
-                <thead className='table_header-group table_thead'>
-                  <tr className='table_tr table_sub-header table_even'>
-                    {statsHeaders.map((header) => (
-                      <th key={header} className='py-2 table_th px-4'>
-                        {header}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className='table_tbody'>
-                  {leagueInfo.entries.map((entry: any, idx: number) => (
-                    <tr key={idx}>
-                      {statsHeaders.map((stat) => (
-                        <td key={stat} className={`table_td py-2 px-4 border-b ${idx % 2 === 0 ? 'bg-secondary-200' : 'bg-transparent'}`}>
-                          {entry.stats[stat] || '-'}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-    
-);
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }

@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
@@ -8,35 +8,58 @@ import "./LeagueTabs.css";
 import BaseballIcon from "../../assets/baseball.tsx";
 import SoccerIcon from "../../assets/soccer.tsx";
 import BasketballIcon from "../../assets/basketball.tsx";
+import ClientAPI from "../../services/ClientAPI.tsx";
 
 interface LeagueTabsProps {
-  onLeagueChange: (newLeague: {league: string, sport: string}) => void;
+  onLeagueChange: (
+    newLeague: { league: string; sport: string },
+    seasonId: number
+  ) => void;
 }
+
+const api = ClientAPI();
 
 export default function LeagueTabs(props: LeagueTabsProps) {
   const [value, setValue] = useState(0);
-  const { onLeagueChange } = props;
+  const [leagues, setLeagues] = useState<any[]>([]);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  useEffect(() => {
+    const fetchLeagues = async () => {
+      try {
+        const response = await api.getLeagues();
+        const leaguesData = response.data;
+        setLeagues(leaguesData);
+      } catch (error) {
+        console.error("Failed to fetch leagues:", error);
+      }
+    };
+
+    fetchLeagues();
+  }, []);
+
+  const handleChange = async (
+    event: React.SyntheticEvent,
+    newValue: number
+  ) => {
     setValue(newValue);
-    switch (newValue) {
-      case 0:
-        onLeagueChange({league: "mlb", sport: "baseball"});
-        break;
-      case 1:
-        onLeagueChange({league: "college-baseball", sport:"baseball"})
-        break;
-      case 2:
-        onLeagueChange({league: "eng.1", sport:"soccer"});
-        break;
-      case 3:
-        onLeagueChange({league: "nba", sport: "basketball"});
-        break;
-      case 4:
-        onLeagueChange({league: "wnba", sport:"basketball"})
-        break;
-      default:
-        onLeagueChange({league: "mlb", sport: "baseball"});
+    const selectedLeague = leagues[newValue];
+    if (selectedLeague) {
+      props.onLeagueChange(
+        {
+          league: selectedLeague.name,
+          sport: selectedLeague.sport_id.toString(),
+        },
+
+        selectedLeague.currentseason.id
+      );
+
+      try {
+        const seasonId = await api.getStandings(
+          selectedLeague.currentseason.id
+        );
+        console.log("season: ", seasonId);
+        return seasonId;
+      } catch (error) {}
     }
   };
 
@@ -87,11 +110,9 @@ export default function LeagueTabs(props: LeagueTabsProps) {
             gap: 1,
           }}
         >
-          <Tab icon={<BaseballIcon />} label="MLB" />
-          <Tab icon={<BaseballIcon />} label="College Baseball" />
-          <Tab icon={<SoccerIcon />} label="Premier League" />
-          <Tab icon={<BasketballIcon />} label="NBA" />
-          <Tab icon={<BasketballIcon />} label="WNBA" />
+          {leagues.map((league, index) => (
+            <Tab key={league.id} icon={<BaseballIcon />} label={league.name} />
+          ))}
         </Tabs>
       </Box>
     </div>
