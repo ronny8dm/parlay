@@ -1,23 +1,17 @@
-from typing import Union
 from dotenv import load_dotenv
 from fastapi import FastAPI
-import asyncio
-from contextlib import asynccontextmanager
-from fastapi.responses import RedirectResponse
-from core.services.data_fetch import DataFetcher
+from core.services.api_service import fetchStandings, getLeaguesWithSeason, getStandingsBySeason
 from fastapi.middleware.cors import CORSMiddleware
-import os
 
 load_dotenv()
 
-data_fetcher = DataFetcher()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await data_fetcher.preload_data()
-    yield
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     await data_fetcher.preload_data()
+#     yield
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 origins = ["*"]
 
@@ -29,37 +23,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/{sport}/standings")
-async def get_standings(sport: str):
-    await data_fetcher.fetch_standings(sport)
-    return data_fetcher.data[sport].get("standings", {})
+@app.get("/leagues")
+async def get_leagues():
+    response = getLeaguesWithSeason()
+    return response
 
-@app.get("/{sport}/schedule")
-async def get_schedule(sport: str):
-    await data_fetcher.fetch_schedule(sport)
-    return data_fetcher.data[sport].get("schedules", {})
-
-@app.get("/{sport}/stats")
-async def get_stats(sport: str):
-    await data_fetcher.fetch_stats(sport)
-    return data_fetcher.data[sport].get("stats", {})
-
-@app.get("/{sport}/teams")
-async def get_teams(sport: str):
-    await data_fetcher.fetch_teams(sport)
-    return data_fetcher.data[sport].get("teams", {})
-
-@app.get("/{sport}/roster")
-async def get_roster(sport: str):
-    await data_fetcher.fetch_rosters(sport)
-    return data_fetcher.data[sport].get("rosters", {})
-
-@app.get("/{sport}/scoreboards")
-async def get_scoreboards(sport: str):
-    await data_fetcher.fetch_scoreboard(sport)
-    return data_fetcher.data[sport].get("scoreboards")
-
-@app.get("/{sport}/summary")
-async def get_summary(sport: str):
-    await data_fetcher.fetch_summary(sport)
-    return data_fetcher.data[sport].get("summaries")
+@app.get("/standings/{seasonId}")
+async def get_standings(seasonId: int):
+    response = fetchStandings(seasonId)
+    return response
