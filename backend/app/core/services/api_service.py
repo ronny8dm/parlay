@@ -31,17 +31,17 @@ def fetch(endpoint, params=None, retries=3):
 
     for attempt in range(retries):
         try:
-            # Make the request
+            
             response = requests.get(url)
-            response.raise_for_status()  # Raise an HTTPError for bad responses (4xx and 5xx)
+            response.raise_for_status()  
 
-            # Process the response based on content type
+            
             if response.headers.get('Content-Type') == 'application/json':
                 data = response.json()
             else:
                 data = response.text
 
-            # Store the response in cache
+            
             cache[url] = data
 
             return data
@@ -49,28 +49,16 @@ def fetch(endpoint, params=None, retries=3):
         except requests.exceptions.RequestException as e:
             logger.error(f"Attempt {attempt + 1} to fetch {url} failed with error: {e}")
             if attempt < retries - 1:
-                time.sleep(2 ** attempt)  # Exponential backoff
+                time.sleep(2 ** attempt)
             else:
                 raise
 
 
 def getLeaguesWithSeason():
     endpoint = "leagues"
-    params = {"include": "currentSeason"}
+    params = {"include": "currentSeason;upcoming"}
     response = fetch(endpoint, params)
     return response
-
-def getStandingsBySeason():
-    leagueSeasonId = getLeaguesWithSeason()
-
-    standings = {}
-    for league in leagueSeasonId['data']:
-        league_name = league['name']
-        seasonId = league['currentSeason']['id']
-
-        standings[league_name] = fetchStandings(seasonId)
-
-    return standings
 
 
 def fetchStandings(seasonId):
@@ -81,4 +69,12 @@ def fetchStandings(seasonId):
     response = fetch(endpoint, params)
     return response
 
+def fetchPredictions(fixtureId, page = int):
+    endpoint = f"predictions/probabilities/fixtures/{fixtureId}"
+    params = {
+        "include": "type;fixture",
+        "page": page
+    }
+    response = fetch(endpoint, params)
+    return response
 

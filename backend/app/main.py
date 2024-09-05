@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from core.services.api_service import fetchStandings, getLeaguesWithSeason, getStandingsBySeason
+from core.services.api_service import fetchPredictions, fetchStandings, getLeaguesWithSeason
 from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
@@ -31,4 +31,10 @@ async def get_leagues():
 @app.get("/standings/{seasonId}")
 async def get_standings(seasonId: int):
     response = fetchStandings(seasonId)
+    return response
+
+
+@app.get("/predictions/{fixtureId}/{page}")
+async def get_predictions(fixtureId: int, page: int):
+    response = fetchPredictions(fixtureId, page)
     return response

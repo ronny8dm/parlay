@@ -3,7 +3,7 @@
 import axios from "axios";
 
 export default function ClientAPI() {
-  const url = "http://localhost:8000";
+  const url = "http://192.168.0.19:8000";
 
   const getLeagues = async () => {
     try {
@@ -22,9 +22,22 @@ export default function ClientAPI() {
       const response = await axios.get(`${url}/standings/${seasonId}`);
       const data = response.data;
       console.log("standings: ", data);
-      return response.data;
+      return data;
     } catch (error) {
       console.error("Error fetching standings:", error);
+      throw error;
+    }
+  };
+
+  const getPredictions = async (fixtureId: number, page: number) => {
+    try {
+      const response = await axios.get(
+        `${url}/predictions/${fixtureId}/${page}`
+      );
+      const data = response.data;
+      return data;
+    } catch (error) {
+      console.error(`error fetching predictions: ${error}`);
       throw error;
     }
   };
@@ -32,5 +45,6 @@ export default function ClientAPI() {
   return {
     getLeagues,
     getStandings,
+    getPredictions,
   };
 }

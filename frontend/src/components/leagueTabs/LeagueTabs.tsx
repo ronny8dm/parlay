@@ -13,8 +13,11 @@ import ClientAPI from "../../services/ClientAPI.tsx";
 interface LeagueTabsProps {
   onLeagueChange: (
     newLeague: { league: string; sport: string },
-    seasonId: number
+    seasonId: number,
+    fixtureId: number,
+    upcomingFixture: any[]
   ) => void;
+  handleOptionClick: (option: string) => void;
 }
 
 const api = ClientAPI();
@@ -22,13 +25,23 @@ const api = ClientAPI();
 export default function LeagueTabs(props: LeagueTabsProps) {
   const [value, setValue] = useState(0);
   const [leagues, setLeagues] = useState<any[]>([]);
+  const delayDuration = 500;
 
   useEffect(() => {
     const fetchLeagues = async () => {
       try {
         const response = await api.getLeagues();
         const leaguesData = response.data;
-        setLeagues(leaguesData);
+
+        console.log(leaguesData);
+        if (leaguesData && leaguesData.length > 0) {
+          setLeagues(leaguesData);
+          setTimeout(() => {
+            handleChange(null, 0);
+          }, delayDuration);
+        } else {
+          console.log("data not available");
+        }
       } catch (error) {
         console.error("Failed to fetch leagues:", error);
       }
@@ -37,28 +50,41 @@ export default function LeagueTabs(props: LeagueTabsProps) {
     fetchLeagues();
   }, []);
 
+  useEffect(() => {
+    if (leagues.length > 0) {
+      handleChange(null, 0);
+    }
+  }, [leagues]);
+
+  console.log(leagues);
   const handleChange = async (
-    event: React.SyntheticEvent,
+    event: React.SyntheticEvent | null,
     newValue: number
   ) => {
     setValue(newValue);
     const selectedLeague = leagues[newValue];
+    console.log(selectedLeague);
     if (selectedLeague) {
+      const upcomingFixtures = selectedLeague.upcoming;
+      const fixtureId =
+        upcomingFixtures.length > 0 ? upcomingFixtures[0].id : null;
       props.onLeagueChange(
         {
           league: selectedLeague.name,
           sport: selectedLeague.sport_id.toString(),
         },
 
-        selectedLeague.currentseason.id
+        selectedLeague.currentseason.id,
+        fixtureId,
+        upcomingFixtures
       );
 
       try {
         const seasonId = await api.getStandings(
           selectedLeague.currentseason.id
         );
-        console.log("season: ", seasonId);
-        return seasonId;
+        props.handleOptionClick("standings");
+        return { seasonId, fixtureId };
       } catch (error) {}
     }
   };
@@ -111,7 +137,7 @@ export default function LeagueTabs(props: LeagueTabsProps) {
           }}
         >
           {leagues.map((league, index) => (
-            <Tab key={league.id} icon={<BaseballIcon />} label={league.name} />
+            <Tab key={league.id} icon={<SoccerIcon />} label={league.name} />
           ))}
         </Tabs>
       </Box>
