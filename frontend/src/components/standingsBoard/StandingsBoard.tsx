@@ -10,7 +10,6 @@ interface StandingsProps {
 
 export default function StandingsBoard(props: StandingsProps) {
   const { data, selectedLeague } = props;
-  console.log("selected league: ", selectedLeague);
 
   const standingsArray = data.data;
 

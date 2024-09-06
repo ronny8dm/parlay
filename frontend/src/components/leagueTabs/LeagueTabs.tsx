@@ -32,8 +32,6 @@ export default function LeagueTabs(props: LeagueTabsProps) {
       try {
         const response = await api.getLeagues();
         const leaguesData = response.data;
-
-        console.log(leaguesData);
         if (leaguesData && leaguesData.length > 0) {
           setLeagues(leaguesData);
           setTimeout(() => {
@@ -55,15 +53,12 @@ export default function LeagueTabs(props: LeagueTabsProps) {
       handleChange(null, 0);
     }
   }, [leagues]);
-
-  console.log(leagues);
   const handleChange = async (
     event: React.SyntheticEvent | null,
     newValue: number
   ) => {
     setValue(newValue);
     const selectedLeague = leagues[newValue];
-    console.log(selectedLeague);
     if (selectedLeague) {
       const upcomingFixtures = selectedLeague.upcoming;
       const fixtureId =

@@ -37,13 +37,11 @@ export default function Board() {
   };
 
   const handleDataFetch = (fetchedData: any) => {
-    console.log("Data fetched: ", fetchedData);
     setData(fetchedData);
     setAiPicks(false);
   };
 
   const handleAIPicksFetch = (fetchedAIPicks: any) => {
-    console.log("AI Picks fetched: ", fetchedAIPicks);
     setAiPicks(fetchedAIPicks);
     setIsAIPicks(true);
   };
@@ -54,7 +52,6 @@ export default function Board() {
 
   const handleOptionClick = async (option: string) => {
     if (option === "standings" && seasonId) {
-      console.log("Fetching standings for season: ", seasonId);
     }
   };
 

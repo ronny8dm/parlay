@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import ClientAPI from "../../services/ClientAPI";
 import StandingsBoard from "../standingsBoard/StandingsBoard";
+import "./PredictionsBoard.css";
 
 interface PredictionsBoardProps {
   fixtureId: number | null;
@@ -44,15 +45,15 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
     );
   };
 
-  console.log(predictions);
-  console.log(props.standingsData);
-  console.log(props.upcomingFixtures);
-
   const findTeamImage = (teamName: string) => {
-    const team = props.standingsData.data.find((item: any) => {
-      return item.participant.name.toLowerCase() === teamName.toLowerCase();
-    });
-    return team ? team.participant.image_path : null;
+    // Check if standingsData exists
+    if (props.standingsData && props.standingsData.data) {
+      const team = props.standingsData.data.find((item: any) => {
+        return item.participant.name.toLowerCase() === teamName.toLowerCase();
+      });
+      return team ? team.participant.image_path : null;
+    }
+    return null; // If no standings data is available, return null
   };
 
   const getPredominantResult = (prediction: any) => {
@@ -65,57 +66,142 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
       const { home, away, draw } = prediction.predictions;
 
       if (!home || !away || !draw) {
-        console.log("Prediction data missing home, away, or draw values");
         return null;
       }
 
       const maxValue = Math.max(home, away, draw);
-      if (maxValue === home) return `Home (${home}%)`;
-      if (maxValue === away) return `Away (${away}%)`;
+      if (maxValue === home) return `Home ${home}%`;
+      if (maxValue === away) return `Away ${away}%`;
       return `Draw (${draw}%)`;
     }
+    return null;
   };
 
-  const getOverUnderPredictions = (overUnderPredictions: any) => {
-    // Since overUnderPredictions is an object, we need to iterate over its entries
-    const relevantPredictions = Object.entries(overUnderPredictions).filter(
-      ([key, value]: [string, any]) =>
-        [
-          "home-over-under-0_5_probability",
-          "away-over-under-1_5_probability",
-          "",
-        ].includes(key) // Adjust this if needed for how you identify relevant predictions
+  const getOverUnderPredictions = (predictions: any) => {
+    const overUnderTypes = [334, 331, 333, 332, 235, 236, 234, 231];
+
+    if (
+      predictions &&
+      typeof predictions === "object" &&
+      overUnderTypes.includes(predictions.type_id)
+    ) {
+      const { yes, no } = predictions.predictions;
+      let predominantValue = yes > no ? `Over ${yes}%` : `Under ${no}%`;
+
+      let name = "";
+      switch (predictions.type_id) {
+        case 334:
+          name = "Home O/U 0.5";
+          break;
+        case 331:
+          name = "Home O/U 1.5";
+          break;
+        case 333:
+          name = "Away O/U 0.5";
+          break;
+        case 332:
+          name = "Away O/U 1.5";
+          break;
+        case 235:
+          name = "Total goals O/U 2.5";
+          break;
+        case 236:
+          name = "Total goals O/U 3.5";
+          break;
+        case 234:
+          name = "Total goals O/U 1.5";
+          break;
+        case 231:
+          name = "Both Teams to Score (BTTS)";
+          predominantValue = yes > no ? `Yes ${yes}%` : `No ${no}%`;
+          break;
+      }
+
+      return `${name}: ${predominantValue}`;
+    }
+
+    return null;
+  };
+
+  const getPredictedResult = (prediction: any) => {
+    if (
+      prediction &&
+      typeof prediction === "object" &&
+      prediction.type_id === 240 // Assuming this is the type for predicted scores
+    ) {
+      const scores = prediction.predictions.scores;
+
+      if (scores && typeof scores === "object") {
+        const entries = Object.entries(scores);
+
+        if (entries.length === 0) return null; // Return null if there are no scores
+
+        // Initialize variables to track the highest score
+        let highestScoreKey: string | null = null;
+        let highestScoreValue = -Infinity;
+
+        // Iterate through the scores and filter out the "Other" keys
+        entries.forEach(([key, value]) => {
+          // Skip keys like "Other_1", "Other_2", etc.
+          if (key.startsWith("Other")) return;
+
+          const scoreValue = value as number; // Typecast to number
+
+          // Find the highest valid score
+          if (scoreValue > highestScoreValue) {
+            highestScoreValue = scoreValue;
+            highestScoreKey = key;
+          }
+        });
+
+        // Return the highest valid score and its percentage, if found
+        if (highestScoreKey) {
+          return `${highestScoreKey}: ${highestScoreValue}%`;
+        }
+      }
+    }
+
+    return null; // If no valid prediction is found, return null
+  };
+
+  const getUpcomingFixtures = (fixtures: any[]) => {
+    const uniqueDates = Array.from(
+      new Set(
+        fixtures.map((fixture) => new Date(fixture.starting_at).toDateString())
+      )
+    ).slice(0, 2); // Get the first two unique dates
+
+    return fixtures.filter((fixture) =>
+      uniqueDates.includes(new Date(fixture.starting_at).toDateString())
     );
-
-    return relevantPredictions.map(([key, value]: [string, any]) => {
-      const { yes, no } = value;
-      const predominantValue = yes > no ? `Yes (${yes}%)` : `No (${no}%)`;
-      return { name: key, predominantValue }; // Assuming `key` holds the name, otherwise adjust
-    });
   };
+
+  const filteredFixtures = getUpcomingFixtures(props.upcomingFixtures);
+
   return (
-    <div className="predictions">
+    <div className="w-full flex flex-col items-center">
       <h2 className="text-xl text-white font-bold mb-4">Upcoming Fixtures</h2>
 
       {/* Display upcoming fixtures */}
-      <ul className="mb-6">
-        {props.upcomingFixtures.map((fixture: any) => (
-          <li key={fixture.id} className="mb-2">
+      <ul className="mb-6 w-full flex flex-col items-center">
+        {filteredFixtures.map((fixture: any) => (
+          <li key={fixture.id} className="mb-2 w-full md:w-3/4 lg:w-1/2">
             <button
               onClick={() => handleFixtureClick(fixture.id)}
-              className="bg-gray-200 hover:bg-gray-300 text-black py-2 px-4 rounded w-full text-left"
+              className="fresh-border hover:border-primary-500 py-2 px-4 rounded w-full text-left"
             >
-              {fixture.name} - {new Date(fixture.starting_at).toLocaleString()}
+              {fixture.name} -{" "}
+              {new Date(fixture.starting_at).toLocaleString(undefined, {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              })}
             </button>
 
-            {/* Show predictions for the selected fixture */}
             {selectedFixture === fixture.id && predictions.length > 0 && (
-              <div className="mt-4 bg-white p-4 border rounded-lg">
-                <h3 className="text-lg font-bold mb-2">
-                  Predictions for {fixture.name}
-                </h3>
-                <div>
-                  {predictions.map((prediction: any) => {
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 w-full">
+                {predictions
+                  .map((prediction: any) => {
                     const [homeTeamName, awayTeamName] =
                       fixture.name.split(" vs ");
                     const homeTeamImage = findTeamImage(homeTeamName);
@@ -124,59 +210,78 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
                       fixture.starting_at
                     ).toLocaleString();
 
-                    // Pass the full prediction object to getPredominantResult
                     const fullTimePrediction = getPredominantResult(prediction);
+                    const overUnderPredictions =
+                      getOverUnderPredictions(prediction);
+                    const fullTimeResult = getPredictedResult(prediction);
 
-                    // Over/Under predictions
-                    const overUnderPredictions = getOverUnderPredictions(
-                      prediction.predictions
-                    );
+                    if (
+                      fullTimePrediction ||
+                      overUnderPredictions ||
+                      fullTimeResult
+                    ) {
+                      return (
+                        <div
+                          key={prediction.id}
+                          className="p-4 border gap-4 rounded-lg shadow-md bg-white  flex flex-col justify-between aspect-w-1 aspect-h-1"
+                        >
+                          <div>
+                            <div className="flex w-full justify-center items-center mb-2">
+                              {homeTeamImage && (
+                                <img
+                                  src={homeTeamImage}
+                                  alt={`${homeTeamName} logo`}
+                                  className="w-8 h-8 object-cover"
+                                />
+                              )}
+                              <span className="mx-2 text-xs">VS</span>
+                              {awayTeamImage && (
+                                <img
+                                  src={awayTeamImage}
+                                  alt={`${awayTeamName} logo`}
+                                  className="w-8 h-8 object-cover"
+                                />
+                              )}
+                            </div>
 
-                    return (
-                      <div key={prediction.id} className="mb-4">
-                        {/* Team Images */}
-                        <div className="flex w-full justify-center items-center mb-2">
-                          <img
-                            src={homeTeamImage}
-                            alt={`${homeTeamName} logo`}
-                            className="w-12 h-12 object-cover"
-                          />
-                          <span className="mx-2">VS</span>
-                          <img
-                            src={awayTeamImage}
-                            alt={`${awayTeamName} logo`}
-                            className="w-12 h-12 object-cover"
-                          />
-                        </div>
-
-                        {/* Game Details */}
-                        <div className="text-center">
-                          <h3 className="text-lg font-semibold">
-                            {fixture.name}
-                          </h3>
-                          <p>{gameTime}</p>
-                        </div>
-
-                        {/* Prediction Results */}
-                        <div className="mt-4">
-                          <p className="font-bold">
-                            Full-Time Result: {fullTimePrediction}
-                          </p>
-                          <h4 className="mt-2 font-semibold">
-                            Over/Under Predictions:
-                          </h4>
-                          {overUnderPredictions.map(
-                            (overUnder: any, index: number) => (
-                              <p key={index}>
-                                {overUnder.name}: {overUnder.predominantValue}
+                            <div className="text-center justify-center items-center">
+                              <h3 className="text-xs mb-2 text-center font-semibold">
+                                {fixture.name}
+                              </h3>
+                              <p className="text-xs mb-2 text-center">
+                                {gameTime}
                               </p>
-                            )
-                          )}
+                            </div>
+
+                            {fullTimePrediction && (
+                              <p className="text-sm uppercase text-center font-bold">
+                                Full Time Winner: {fullTimePrediction}
+                              </p>
+                            )}
+                            {overUnderPredictions && (
+                              <p className="text-sm uppercase text-center font-bold">
+                                {overUnderPredictions}
+                              </p>
+                            )}
+                            {fullTimeResult && (
+                              <p className="text-sm uppercase text-center font-bold">
+                                Predicted Result: {fullTimeResult}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Button for full analysis */}
+                          <div className="mt-4">
+                            <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded w-full">
+                              View Analysis
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    }
+                    return null;
+                  })
+                  .filter(Boolean)}
               </div>
             )}
           </li>
