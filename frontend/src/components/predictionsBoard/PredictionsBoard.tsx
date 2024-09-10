@@ -192,6 +192,8 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
             >
               {fixture.name} -{" "}
               {new Date(fixture.starting_at).toLocaleString(undefined, {
+                month: "numeric",
+                day: "numeric",
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: false,
@@ -223,7 +225,7 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
                       return (
                         <div
                           key={prediction.id}
-                          className="p-4 border gap-4 rounded-lg shadow-md bg-white  flex flex-col justify-between aspect-w-1 aspect-h-1"
+                          className="p-4 border gap-4 rounded-lg shadow-md  fresh-border bg-secondary-100 flex flex-col justify-between aspect-w-1 aspect-h-1"
                         >
                           <div>
                             <div className="flex w-full justify-center items-center mb-2">
@@ -272,7 +274,7 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
 
                           {/* Button for full analysis */}
                           <div className="mt-4">
-                            <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded w-full">
+                            <button className="btn_fresh-border hover:bg-secondary-hover hover:border-secondary-hborder text-white py-2 px-4 rounded w-full">
                               View Analysis
                             </button>
                           </div>

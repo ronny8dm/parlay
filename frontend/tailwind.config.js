@@ -15,11 +15,15 @@ export default {
       colors: {
         primary: {
           500: '#503BFF',
+          textGrey: '#7a7983',
           hover: '#5542ff'
         },
         background: '#050614',
         secondary: {
-          200: '#2a283c'
+          200: '#2a283c',
+          100: '#121320',
+          hover: '#080a85',
+          hborder: '#5542ff'
         },
       }
     }

@@ -1,0 +1,11 @@
+.money_emoji{
+    background-image: url(../assets/dollar-face-emoji.png);
+    width: 4rem;
+    height: 4rem;
+}
+
+.football_emoji{
+    background-image: url(../assets/football.png);
+    width: 4rem;
+    height: 4rem;
+}
