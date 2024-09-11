@@ -1,0 +1,8 @@
+.fresh_border{
+    border: solid;
+    border-width: .2px;
+    border-right: none;
+    border-left: none;
+    color: #fff;
+    background-color: transparent;
+}

@@ -77,7 +77,7 @@ export default function Header() {
           <div className="p-container gap-4">
             <div className="column navigation-column">
               <div role="button" aria-label="Go Home" tabIndex={0}>
-                <img src={SvgImg} className="logo" alt="" />
+                <img src={SvgImg} className="logo " alt="" />
               </div>
               <div className="font-common navigation">
                 <ul>
@@ -88,22 +88,24 @@ export default function Header() {
                 </ul>
               </div>
             </div>
-            <div className="column user-column gap-4">
-              <button className="font-common sign-up">Sign Up</button>
-              <button className="font-common login">Log In</button>
-            </div>
-            <div className="gap-2 flex flex-nowrap lg:hidden">
-              <button className="basis-auto shrink-0 font-common mobile_sign-up md:hidden">
-                Sign Up
-              </button>
-              <button
-                type="button"
-                className="mr-2.5 inline-flex mobile-hamburger items-center justify-center rounded-md p-2.5"
-                onClick={() => setMobileMenuOpen(true)}
-              >
-                <span className="sr-only">Open main menu</span>
-                <Bars3Icon className="h-6 grow w-6" aria-hidden="true" />
-              </button>
+            <div className="flex gap-6 justify-between">
+              <div className="flex user-column gap-4">
+                <button className="font-common sign-up">Sign Up</button>
+                <button className="font-common login">Log In</button>
+              </div>
+              <div className="gap-2 pl-6 flex flex-nowrap lg:hidden">
+                <button className="font-common mobile_sign-up md:hidden">
+                  Sign Up
+                </button>
+                <button
+                  type="button"
+                  className="mr-2.5 items-center justify-center md:hidden rounded-md p-2.5"
+                  onClick={() => setMobileMenuOpen(true)}
+                >
+                  <span className="sr-only">Open main menu</span>
+                  <Bars3Icon className="h-6 grow w-6" aria-hidden="true" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import footballContainer from "../../assets/images/football-container.png";
 import departmentImage from "../assets/images/svg/coding.svg";
 import launchImage from "../assets/images/svg/office-desk.svg";
 
@@ -10,7 +11,7 @@ export default function Features() {
   const team = [
     {
       title: "Hosting Fees Included",
-      icon: "server-alt",
+      icon: "server",
       subtext: "The monthly payment includes hosting fees.",
     },
     {
@@ -52,7 +53,7 @@ export default function Features() {
         <div className="container lg mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 md:grid-cols-2 pb-8 items-center">
             <div>
-              <h6 className="text-orange-600 text-base font-medium uppercase mb-2">
+              <h6 className="text-primary-500 text-base font-medium uppercase mb-2">
                 What We Do ?
               </h6>
               <h3 className="mb-4 md:text-2xl text-xl font-semibold dark:text-white md:mb-0">
@@ -75,18 +76,18 @@ export default function Features() {
                 key={key}
                 className={`features p-6 ${
                   key % 2 === 0
-                    ? "hover:shadow-xl hover:shadow-slate-100 dark:hover:shadow-slate-800"
-                    : "shadow-xl shadow-slate-100 dark:shadow-slate-800"
+                    ? "hover:shadow-xl hover:shadow-primary-500 dark:hover:shadow-primary-500"
+                    : "shadow-xl shadow-primary-500 dark:shadow-primary-500"
                 } transition duration-500 rounded-3xl mt-8`}
               >
-                <div className="w-20 h-20 bg-orange-600/5 text-orange-600 rounded-xl text-3xl flex align-middle justify-center items-center shadow-sm">
+                <div className="w-20 h-20 bg-primary-500 text-primary-500 rounded-xl text-3xl flex align-middle justify-center items-center shadow-sm">
                   <i className={`uil uil-${item.icon}`}></i>
                 </div>
 
                 <div className="content mt-7">
                   <Link
                     to="#"
-                    className="text-lg hover:text-orange-600 dark:text-white dark:hover:text-orange-600 transition-all duration-500 ease-in-out font-medium"
+                    className="text-lg hover:text-primary-500 dark:text-white dark:hover:text-primary-500 transition-all duration-500 ease-in-out font-medium"
                   >
                     {item.title}
                   </Link>
@@ -99,7 +100,7 @@ export default function Features() {
 
         <div className="container md:mt-24 mt-16">
           <div className="grid grid-cols-1 pb-8 text-center">
-            <h6 className="text-orange-600 text-base font-medium uppercase mb-2">
+            <h6 className="text-primary-500 text-base font-medium uppercase mb-2">
               Work Process
             </h6>
             <h3 className="mb-4 md:text-2xl text-xl font-medium dark:text-white">
@@ -112,13 +113,17 @@ export default function Features() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 mt-8">
+          <div className="grid grid-cols-1 mt-8 -z-10">
             <div className="timeline relative">
-              <div className="timeline-item">
+              <div className="timeline-item ">
                 <div className="grid sm:grid-cols-2">
                   <div className="">
                     <div className="duration date-label-left ltr:float-right rtl:float-left md:me-7 relative">
-                      <img className="h-64 w-64" alt="" />
+                      <img
+                        src={footballContainer}
+                        className="h-64 w-64"
+                        alt=""
+                      />
                     </div>
                   </div>
                   <div className="mt-4 md:mt-0">
@@ -138,7 +143,7 @@ export default function Features() {
                 </div>
               </div>
 
-              <div className="timeline-item mt-5 pt-4">
+              <div className="timeline-item mt-5  pt-4">
                 <div className="grid sm:grid-cols-2">
                   <div className="md:order-1 order-2">
                     <div className="event event-description-left ltr:float-left rtl:float-right ltr:text-right rtl:text-left md:me-7">
@@ -157,7 +162,11 @@ export default function Features() {
                   </div>
                   <div className="md:order-2 order-1">
                     <div className="duration duration-right md:ms-7 relative">
-                      <img className="h-64 w-64" alt="" />
+                      <img
+                        src={footballContainer}
+                        className="h-64 w-64"
+                        alt=""
+                      />
                     </div>
                   </div>
                 </div>
@@ -167,7 +176,11 @@ export default function Features() {
                 <div className="grid sm:grid-cols-2">
                   <div className="mt-4 mt-sm-0">
                     <div className="duration date-label-left ltr:float-right rtl:float-left md:me-7 relative">
-                      <img className="h-64 w-64" alt="" />
+                      <img
+                        src={footballContainer}
+                        className="h-64 w-64"
+                        alt=""
+                      />
                     </div>
                   </div>
                   <div className="mt-4 mt-sm-0">

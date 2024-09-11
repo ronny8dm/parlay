@@ -3,7 +3,7 @@
 import axios from "axios";
 
 export default function ClientAPI() {
-  const url = "http://192.168.0.27:8000";
+  const url = "http://192.168.0.19:8000";
 
   const getLeagues = async () => {
     try {

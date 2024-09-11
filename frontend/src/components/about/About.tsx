@@ -1,7 +1,9 @@
 /** @format */
 
 import React, { useState } from "react";
-import AboutImage from "../assets/images/about.jpg";
+import demo from "../../assets/videos/demo.mov";
+import poster from "../../assets/images/demo-poster.png";
+import "./About.css";
 
 export default function About() {
   const [isOpen, setOpen] = useState(false);
@@ -9,21 +11,29 @@ export default function About() {
   return (
     <>
       <section
-        className="relative md:py-24 py-16 bg-gray-50 dark:bg-slate-800"
+        className="relative md:py-24 py-16  shadow-xl shadow-primary-500"
         id="about"
       >
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 md:grid-cols-2 gap-10 items-center">
             <div className="lg:col-span-5">
               <div className="relative">
-                <img className="rounded-lg shadow-lg relative" alt="" />
+                <video
+                  src={demo}
+                  className="rounded-lg shadow-lg relative"
+                  controls
+                  playsInline
+                  preload="auto"
+                  loop
+                  poster={poster}
+                ></video>
               </div>
             </div>
             {/* end col */}
 
             <div className="lg:col-span-7">
               <div className="lg:ms-7">
-                <h6 className="text-orange-600 text-base font-medium uppercase mb-2">
+                <h6 className="text-primary-500 text-base font-medium uppercase mb-2">
                   Who We Are ?
                 </h6>
                 <h3 className="mb-4 md:text-2xl text-xl font-medium dark:text-white">
@@ -39,12 +49,10 @@ export default function About() {
                 </p>
 
                 <div className="relative mt-10">
-                  <a
-                    href="#portfolio"
-                    className="btn bg-orange-600 hover:bg-orange-700 border-orange-600 hover:border-orange-700 text-white rounded-md"
-                  >
-                    View Portfolio
-                  </a>
+                  <button className="basis-auto shrink-0 font-common mobile_sign-up md:hidden">
+                    Sign Up
+                  </button>
+                  <button className="font-common sign-up">Sign Up</button>
                 </div>
               </div>
             </div>
