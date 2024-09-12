@@ -6,9 +6,9 @@ export default function Pricing() {
   const pricing = [
     {
       id: 1,
-      title: "E-Commerce",
-      price: 1500,
-      user: "E-Commerce",
+      title: "All in",
+      price: "49,99",
+      user: "",
       features: [
         "Complete documentation",
         "Custom Designed",
@@ -16,40 +16,14 @@ export default function Pricing() {
         "Easy to edit",
       ],
     },
-    {
-      id: 2,
-      title: "Business",
-      price: 150,
-      user: 5,
-      features: [
-        "Unlimited Edits",
-        "Includes Hosting",
-        "24/7 Customer Service",
-        "Lifetime Updates",
-      ],
-    },
-    {
-      id: 3,
-      title: "Logos & Designs",
-      price: 0,
-      user: 100,
-      features: [
-        "Included in any package",
-        "All file formats",
-        "Ready to use",
-        "Free w/ Subscription",
-      ],
-    },
   ];
 
   return (
     <>
-      {/* Start */}
-
       <section className="relative md:py-24 py-16" id="pricing">
         <div className="container">
-          <div className="grid grid-cols-1 pb-8 text-center">
-            <h6 className="text-orange-600 text-base font-medium uppercase mb-2">
+          <div className="grid grid-cols-1  text-center">
+            <h6 className="text-primary-500 text-base font-medium uppercase mb-2">
               Pricing
             </h6>
             <h3 className="mb-4 md:text-2xl text-xl font-medium dark:text-white">
@@ -61,13 +35,13 @@ export default function Pricing() {
             </p>
           </div>
 
-          <div className="flex flex-wrap">
+          <div className="flex flex-wra justify-center">
             {pricing.map((item, key) => (
               <div
                 className="w-full md:w-1/2 lg:w-1/3 px-0 md:px-3 mt-8"
                 key={key}
               >
-                <div className="flex flex-col pt-8 pb-8 bg-zinc-50 hover:bg-white dark:bg-gray-800 dark:hover:bg-black rounded-md shadow shadow-slate-200 dark:shadow-slate-700 transition duration-500">
+                <div className="flex flex-col pt-8 pb-8 bg-zinc-50 hover:bg-white dark:bg-transparent dark:hover:bg-black rounded-md shadow-xl shadow-primary-500  transition duration-500">
                   <div className="px-8 pb-8">
                     <h3 className="mb-6 text-lg md:text-xl font-medium dark:text-white">
                       {item.title}
@@ -83,7 +57,7 @@ export default function Pricing() {
                     </div>
                     {key !== 2 ? (
                       <p className="mb-6 text-slate-430 dark:text-slate-300">
-                        Essential features for your {item.user} website
+                        Acces to all the metrics and predictions
                       </p>
                     ) : (
                       key === 2 && (
@@ -94,9 +68,9 @@ export default function Pricing() {
                     )}
                     <a
                       href="#contact"
-                      className="btn bg-orange-600 hover:bg-orange-700 border-orange-600 hover:border-orange-700 text-white rounded-md w-full"
+                      className="btn bg-primary-500 uppercase text-white rounded-md w-full"
                     >
-                      Get in touch
+                      Start now
                     </a>
                   </div>
                   <div className="border-b border-slate-200 dark:border-slate-700"></div>
@@ -115,7 +89,6 @@ export default function Pricing() {
               </div>
             ))}
           </div>
-          {/* <div className="flex justify-center text-slate-400 dark:text-slate-300 mt-2"><span className="text-orange-600">*</span>No credit card required</div> */}
         </div>
       </section>
     </>

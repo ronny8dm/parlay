@@ -2,10 +2,9 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-
 import footballContainer from "../../assets/images/football-container.png";
-import departmentImage from "../assets/images/svg/coding.svg";
-import launchImage from "../assets/images/svg/office-desk.svg";
+import barChart from "../../assets/images/bar-chart.png";
+import moneyBag from "../../assets/images/money-bag.png";
 
 export default function Features() {
   const team = [
@@ -80,7 +79,7 @@ export default function Features() {
                     : "shadow-xl shadow-primary-500 dark:shadow-primary-500"
                 } transition duration-500 rounded-3xl mt-8`}
               >
-                <div className="w-20 h-20 bg-primary-500 text-primary-500 rounded-xl text-3xl flex align-middle justify-center items-center shadow-sm">
+                <div className="w-20 h-20 bg-primary-500 text-white rounded-xl text-3xl flex align-middle justify-center items-center shadow-sm">
                   <i className={`uil uil-${item.icon}`}></i>
                 </div>
 
@@ -162,11 +161,7 @@ export default function Features() {
                   </div>
                   <div className="md:order-2 order-1">
                     <div className="duration duration-right md:ms-7 relative">
-                      <img
-                        src={footballContainer}
-                        className="h-64 w-64"
-                        alt=""
-                      />
+                      <img src={barChart} className="h-64 w-64" alt="" />
                     </div>
                   </div>
                 </div>
@@ -176,11 +171,7 @@ export default function Features() {
                 <div className="grid sm:grid-cols-2">
                   <div className="mt-4 mt-sm-0">
                     <div className="duration date-label-left ltr:float-right rtl:float-left md:me-7 relative">
-                      <img
-                        src={footballContainer}
-                        className="h-64 w-64"
-                        alt=""
-                      />
+                      <img src={moneyBag} className="h-64 w-64" alt="" />
                     </div>
                   </div>
                   <div className="mt-4 mt-sm-0">

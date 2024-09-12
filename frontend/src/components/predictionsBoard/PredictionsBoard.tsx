@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import ClientAPI from "../../services/ClientAPI";
 import StandingsBoard from "../standingsBoard/StandingsBoard";
 import "./PredictionsBoard.css";
+import PredictionsModal from "../predicitonsModal/PredictionsModal";
 
 interface PredictionsBoardProps {
   fixtureId: number | null;
@@ -18,6 +19,9 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
   const [selectedFixture, setSelectedFixture] = useState<number | null>(
     props.fixtureId
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPredictionData, setSelectedPredictionData] =
+    useState<any>(null);
 
   useEffect(() => {
     if (selectedFixture !== null) {
@@ -43,6 +47,16 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
     setSelectedFixture((prevSelected) =>
       prevSelected === fixtureId ? null : fixtureId
     );
+  };
+
+  const handleViewAnalysisClick = (predictionData: any) => {
+    setSelectedPredictionData(predictionData); // Set the data for the modal
+    setIsModalOpen(true); // Open the modal
+    console.log("button clicked");
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const findTeamImage = (teamName: string) => {
@@ -274,7 +288,12 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
 
                           {/* Button for full analysis */}
                           <div className="mt-4">
-                            <button className="btn_fresh-border hover:bg-secondary-hover hover:border-secondary-hborder text-white py-2 px-4 rounded w-full">
+                            <button
+                              className="btn_fresh-border hover:bg-secondary-hover hover:border-secondary-hborder text-white py-2 px-4 rounded w-full"
+                              onClick={() =>
+                                handleViewAnalysisClick(predictions)
+                              }
+                            >
                               View Analysis
                             </button>
                           </div>
@@ -289,6 +308,12 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
           </li>
         ))}
       </ul>
+      {/* Modal */}
+      <PredictionsModal
+        isOpen={isModalOpen}
+        closeModal={closeModal}
+        data={selectedPredictionData}
+      />
     </div>
   );
 }

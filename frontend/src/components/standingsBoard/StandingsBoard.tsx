@@ -85,7 +85,7 @@ export default function StandingsBoard(props: StandingsProps) {
   return (
     <div className="relative w-full sm:w-2/3 h-96 overflow-y-auto">
       <table className=" w-full text-xs sm:text-sm md:text-base text-center rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-transparent dark:bg-gray-700 dark:text-gray-400">
           <tr>
             {statsHeaders.map((header, index) => (
               <th
@@ -101,7 +101,7 @@ export default function StandingsBoard(props: StandingsProps) {
         <tbody>
           {standingsData.map((team: any, index: number) => (
             <tr
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+              className="bg-transparent border-b dark:bg-gray-800 dark:border-gray-700"
               key={index}
             >
               <th
