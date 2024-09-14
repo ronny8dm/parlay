@@ -16,6 +16,7 @@ const api = ClientAPI();
 
 export default function PredictionsBoard(props: PredictionsBoardProps) {
   const [predictions, setPredictions] = useState<any[]>([]);
+  const [analysisData, setAnalysisData] = useState<any>(null);
   const [selectedFixture, setSelectedFixture] = useState<number | null>(
     props.fixtureId
   );
@@ -49,10 +50,15 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
     );
   };
 
-  const handleViewAnalysisClick = (predictionData: any) => {
-    setSelectedPredictionData(predictionData); // Set the data for the modal
-    setIsModalOpen(true); // Open the modal
-    console.log("button clicked");
+  const handleViewAnalysisClick = async (predictionsData: []) => {
+    try {
+      const response = await api.generateAnalysis(predictionsData);
+      setAnalysisData(response);
+      setSelectedPredictionData(predictions);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("Failed to generate analysis:", error);
+    }
   };
 
   const closeModal = () => {
@@ -291,7 +297,7 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
                             <button
                               className="btn_fresh-border hover:bg-secondary-hover hover:border-secondary-hborder text-white py-2 px-4 rounded w-full"
                               onClick={() =>
-                                handleViewAnalysisClick(predictions)
+                                handleViewAnalysisClick(prediction)
                               }
                             >
                               View Analysis
@@ -313,6 +319,7 @@ export default function PredictionsBoard(props: PredictionsBoardProps) {
         isOpen={isModalOpen}
         closeModal={closeModal}
         data={selectedPredictionData}
+        analysisData={analysisData}
       />
     </div>
   );

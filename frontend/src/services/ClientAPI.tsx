@@ -3,7 +3,7 @@
 import axios from "axios";
 
 export default function ClientAPI() {
-  const url = "http://192.168.0.19:8000";
+  const url = "http://192.168.0.27:8000";
 
   const getLeagues = async () => {
     try {
@@ -40,9 +40,26 @@ export default function ClientAPI() {
     }
   };
 
+  const generateAnalysis = async (fixtureData: any) => {
+    try {
+      const response = await axios.post(
+        `${url}/generate-analysis/`,
+        fixtureData
+      );
+      const data = response.data;
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(fixtureData);
+      console.error("Error generating analysis:", error, fixtureData);
+      throw error;
+    }
+  };
+
   return {
     getLeagues,
     getStandings,
     getPredictions,
+    generateAnalysis,
   };
 }

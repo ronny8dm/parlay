@@ -1,5 +1,7 @@
 import json
 from urllib.parse import urlencode
+from fastapi import HTTPException
+import openai
 import requests
 from cachetools import TTLCache
 import logging
@@ -8,12 +10,20 @@ import os
 import time
 
 load_dotenv()
-
 max_concurrent_tasks = 10
-
 cache = TTLCache(maxsize=100, ttl=300)
-
 logger = logging.getLogger(__name__)
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+if not len(OPENAI_API_KEY):
+    print("please provide a valid api key")
+
+openai.api_key = OPENAI_API_KEY
+
+openai_model = "gpt-4"
+max_responses = 1
+temperature = 0.7
+max_tokens = 512
 
 
 def fetch(endpoint, params=None, retries=3):
@@ -78,3 +88,59 @@ def fetchPredictions(fixtureId, page = int):
     response = fetch(endpoint, params)
     return response
 
+def fetchAnalysis(fixture):
+    try:
+        # Check if API key is present
+        if not openai.api_key:
+            raise HTTPException(status_code=503, detail="OpenAI API Key is missing")
+        
+        # Print the fixture data to verify it is correct
+        print(f"Fixture Data: {json.dumps(fixture, indent=2)}")
+        
+        # Send request to OpenAI API (without streaming for simplicity)
+        print("Sending OpenAI request...")
+        response = openai.chat.completions.create(
+            model="gpt-4-turbo",  # Ensure you're using the correct model name
+            messages=[{
+                "role": "user",
+                "content": f"Provide an analysis for the following football fixture: {fixture['fixture']['name']}, starting on {fixture['fixture']['starting_at']}. The probability for over 1.5 goals is {fixture['predictions']['yes']}%."
+            }],
+            max_tokens=512,
+            temperature=0.7,
+            stream=True
+        )
+        
+        full_response = ""
+
+        # Process each chunk in the stream
+        print("Receiving OpenAI response...")
+        for chunk in response:
+            # Debug: Print the entire chunk to check its contents
+            # Check if chunk contains content and append it to the response
+            if chunk.choices[0].delta.content is not None:
+                content_chunk = chunk.choices[0].delta.content
+                full_response += content_chunk  # Append to the full response
+            else:
+                print("Chunk does not contain valid content.")
+        
+        print(f"Full OpenAI Response: {full_response}")
+        # Return the full response once streaming is complete
+        return {"data": {"analysis": full_response}}
+
+        
+
+    # Handle OpenAI-specific errors, if available
+    except Exception as e:
+        # Log and raise OpenAI-specific errors
+        print(f"OpenAI API Error: {str(e)}")
+        raise HTTPException(status_code=503, detail=f"OpenAI API Error: {str(e)}")
+    
+    except Exception as e:
+        # Handle rate-limiting
+        print(f"Rate Limit Error: {str(e)}")
+        raise HTTPException(status_code=503, detail=f"Rate Limit Error: {str(e)}")
+
+    except Exception as e:
+        # Catch-all for any other exceptions
+        print(f"Error in generating analysis: {str(e)}")
+        raise HTTPException(status_code=503, detail=f"Error in generating analysis: {str(e)}")

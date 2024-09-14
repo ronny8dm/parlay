@@ -7,21 +7,49 @@ interface PredictionsModalProps {
   isOpen: boolean;
   closeModal: () => void;
   data: any;
+  analysisData: any;
 }
 
 export default function PredictionsModal({
   isOpen,
   closeModal,
   data,
+  analysisData,
 }: PredictionsModalProps) {
-  if (!data) {
+  if (!data && !analysisData) {
     return null;
   }
 
-  console.log(JSON.stringify(data));
-  const analysisText =
-    "This product shows great potential in the market, with strong competition but also clear advantages in price and features. The customer sentiment analysis suggests positive feedback, particularly regarding ease of use and support.";
+  const analysisText = analysisData.data.analysis;
 
+  const homeGoalsTypeIds = [334, 331];
+  const awayGoalsTypeIds = [333, 332];
+  const totalGoalsTypeIds = [234, 235, 236];
+
+  console.log("data analysis in modal: ", analysisData);
+  // Filter the data based on the type_ids for home and away teams
+  const homePredictions = data.filter((prediction: any) =>
+    homeGoalsTypeIds.includes(prediction.type_id)
+  );
+  const awayPredictions = data.filter((prediction: any) =>
+    awayGoalsTypeIds.includes(prediction.type_id)
+  );
+  const totalGoalsPredictions = data.filter((prediction: any) =>
+    totalGoalsTypeIds.includes(prediction.type_id)
+  );
+
+  // Combine home and away predictions for unique headers
+  const combinedPredictions = [...homePredictions, ...awayPredictions];
+  const uniqueHeaders = [
+    ...new Set(
+      combinedPredictions.map((prediction: any) => {
+        const overUnderNumber = prediction.type.name.match(/\d+(\.\d+)?/);
+        return overUnderNumber ? overUnderNumber[0] : "";
+      })
+    ),
+  ];
+
+  console.log(JSON.stringify(data));
   return (
     <Dialog open={isOpen} onClose={closeModal} className="absolute z-10">
       <DialogBackdrop
@@ -103,84 +131,139 @@ export default function PredictionsModal({
                 return null;
               })}
 
-              {/* Second Table */}
               <div className="bg-white shadow-md rounded-lg overflow-x-scroll">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-gray-200 text-gray-600">
                     <tr>
-                      <th className="px-6 py-3" colSpan={5}>
-                        Over/Under for Teams vs Team Full Time
-                      </th>
-                    </tr>
-                    <tr>
                       <th className="px-6 py-3">Team</th>
-                      <th className="px-6 py-3 text-center">Over 0.5</th>
-                      <th className="px-6 py-3 text-center">Over 1.5</th>
-                      <th className="px-6 py-3 text-center">Under 0.5</th>
-                      <th className="px-6 py-3 text-center">Under 1.5</th>
+                      {/* Dynamically add table headers for unique Over/Under values */}
+                      {uniqueHeaders.map((header, index) => (
+                        <React.Fragment key={index}>
+                          <th className="px-6 py-3 text-center">
+                            Over {header}
+                          </th>
+                          <th className="px-6 py-3 text-center">
+                            Under {header}
+                          </th>
+                        </React.Fragment>
+                      ))}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-300">
+                    {/* Row for Home */}
                     <tr>
                       <td className="px-6 py-4">Home</td>
-                      <td className="px-6 py-4 text-center">16.54%</td>
-                      <td className="px-6 py-4 text-center">16.54%</td>
-                      <td className="px-6 py-4 text-center">16.54%</td>
-                      <td className="px-6 py-4 text-center">16.54%</td>
+                      {uniqueHeaders.map((header, index) => {
+                        const homePrediction = homePredictions.find(
+                          (prediction: any) =>
+                            prediction.type.name.includes(header)
+                        );
+                        const yes = homePrediction?.predictions?.yes;
+                        const no = homePrediction?.predictions?.no;
+
+                        return (
+                          <React.Fragment key={index}>
+                            <td className="px-6 py-4 text-center">
+                              {yes !== undefined ? `${yes}%` : "N/A"}
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              {no !== undefined ? `${no}%` : "N/A"}
+                            </td>
+                          </React.Fragment>
+                        );
+                      })}
                     </tr>
+
+                    {/* Row for Away */}
                     <tr>
                       <td className="px-6 py-4">Away</td>
-                      <td className="px-6 py-4 text-center">18.30%</td>
-                      <td className="px-6 py-4 text-center">18.30%</td>
-                      <td className="px-6 py-4 text-center">18.30%</td>
-                      <td className="px-6 py-4 text-center">18.30%</td>
+                      {uniqueHeaders.map((header, index) => {
+                        const awayPrediction = awayPredictions.find(
+                          (prediction: any) =>
+                            prediction.type.name.includes(header)
+                        );
+                        const yes = awayPrediction?.predictions?.yes;
+                        const no = awayPrediction?.predictions?.no;
+
+                        return (
+                          <React.Fragment key={index}>
+                            <td className="px-6 py-4 text-center">
+                              {yes !== undefined ? `${yes}%` : "N/A"}
+                            </td>
+                            <td className="px-6 py-4 text-center">
+                              {no !== undefined ? `${no}%` : "N/A"}
+                            </td>
+                          </React.Fragment>
+                        );
+                      })}
                     </tr>
                   </tbody>
                 </table>
               </div>
 
               {/* Analysis Section */}
-              <div className="bg-white order-4 shadow-md rounded-lg p-6">
-                <h3 className="text-lg font-semibold mb-2">Product Analysis</h3>
-                <blockquote className="border-l-4 border-blue-500 italic pl-4 text-gray-700">
-                  {analysisText}
-                </blockquote>
-              </div>
 
               {/* Third Table */}
               <div className="bg-white shadow-md rounded-lg overflow-auto col-span-full">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-gray-200 text-gray-600">
                     <tr>
-                      <th className="px-6 py-3" colSpan={5}>
+                      <th className="px-6 py-3" colSpan={4}>
                         Over/Under Total Goals
                       </th>
                     </tr>
                     <tr>
                       <th className="px-6 py-3">Goals</th>
-                      <th className="px-6 py-3 text-center">Over 2.5</th>
-                      <th className="px-6 py-3 text-center">Over 3.5</th>
-                      <th className="px-6 py-3 text-center">Under 2.5</th>
-                      <th className="px-6 py-3 text-center">Under 3.5</th>
+                      {/* Dynamically add table headers based on the total goals type */}
+                      {totalGoalsPredictions.map(
+                        (prediction: any, index: number) => {
+                          const overUnderNumber =
+                            prediction.type.name.match(/\d+(\.\d+)?/);
+                          const displayValue = overUnderNumber
+                            ? overUnderNumber[0]
+                            : "";
+                          return (
+                            <React.Fragment key={index}>
+                              <th className="px-6 py-3 text-center">
+                                Over {displayValue}
+                              </th>
+                              <th className="px-6 py-3 text-center">
+                                Under {displayValue}
+                              </th>
+                            </React.Fragment>
+                          );
+                        }
+                      )}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-300">
                     <tr>
-                      <td className="px-6 py-4">Home</td>
-                      <td className="px-6 py-4 text-center">18.75%</td>
-                      <td className="px-6 py-4 text-center">12.34%</td>
-                      <td className="px-6 py-4 text-center">10.54%</td>
-                      <td className="px-6 py-4 text-center">8.44%</td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4">Away</td>
-                      <td className="px-6 py-4 text-center">15.65%</td>
-                      <td className="px-6 py-4 text-center">11.22%</td>
-                      <td className="px-6 py-4 text-center">9.87%</td>
-                      <td className="px-6 py-4 text-center">7.56%</td>
+                      <td className="px-6 py-4">Total</td>
+                      {totalGoalsPredictions.map(
+                        (prediction: any, index: number) => {
+                          const yes = prediction.predictions?.yes;
+                          const no = prediction.predictions?.no;
+                          return (
+                            <React.Fragment key={index}>
+                              <td className="px-6 py-4 text-center">
+                                {yes !== undefined ? `${yes}%` : "N/A"}
+                              </td>
+                              <td className="px-6 py-4 text-center">
+                                {no !== undefined ? `${no}%` : "N/A"}
+                              </td>
+                            </React.Fragment>
+                          );
+                        }
+                      )}
                     </tr>
                   </tbody>
                 </table>
+              </div>
+              <div className="bg-white shadow-md rounded-lg p-6">
+                <h3 className="text-lg font-semibold mb-2">Product Analysis</h3>
+                <p className="border-l-4 border-primary-500 italic pl-4 text-gray-700">
+                  {analysisText}
+                </p>
               </div>
             </div>
           </DialogPanel>

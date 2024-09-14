@@ -1,6 +1,9 @@
+import json
+import os
 from dotenv import load_dotenv
-from fastapi import FastAPI
-from core.services.api_service import fetchPredictions, fetchStandings, getLeaguesWithSeason
+from fastapi import FastAPI, HTTPException
+from openai import OpenAI 
+from core.services.api_service import fetchAnalysis, fetchPredictions, fetchStandings, getLeaguesWithSeason
 from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
@@ -23,6 +26,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+client = OpenAI(
+    organization=os.getenv("ORGANIZATION"),
+    project=os.getenv("PROJECT_ID"),
+)
+
 @app.get("/leagues")
 async def get_leagues():
     response = getLeaguesWithSeason()
@@ -38,3 +46,8 @@ async def get_standings(seasonId: int):
 async def get_predictions(fixtureId: int, page: int):
     response = fetchPredictions(fixtureId, page)
     return response
+
+@app.post("/generate-analysis/")
+async def generate_analysis(fixture: dict):
+   response = fetchAnalysis(fixture)
+   return response
